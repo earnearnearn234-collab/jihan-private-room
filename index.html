@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jihan • Private Room</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#09090b;color:#eee;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+.app{max-width:900px;margin:auto;height:100dvh;display:flex;flex-direction:column;background:radial-gradient(circle at 70% 10%,#251b35 0,#0b0b0e 35%)}
+header{padding:18px 20px;border-bottom:1px solid #29252f;display:flex;align-items:center;gap:12px}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#2d2537,#8e72b5);font-size:22px}
+h1{font-size:18px;margin:0}.sub{font-size:12px;color:#a9a1b5;margin-top:3px}
+.chat{flex:1;overflow:auto;padding:22px 16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:78%;padding:12px 15px;border-radius:18px;line-height:1.55;white-space:pre-wrap}
+.him{align-self:flex-start;background:#211f25;border-bottom-left-radius:5px}.me{align-self:flex-end;background:#8067a8;border-bottom-right-radius:5px}
+.time{font-size:10px;color:#777;margin:0 6px}.typing{color:#aaa;font-size:13px;padding:0 8px}
+form{display:flex;gap:10px;padding:12px;border-top:1px solid #29252f;background:#0c0c0f}
+input{flex:1;border:1px solid #38313f;background:#17151b;color:#fff;border-radius:24px;padding:13px 16px;outline:none}
+button{border:0;border-radius:50%;width:48px;height:48px;background:#9b80c7;color:#fff;font-size:20px}
+.note{font-size:11px;color:#777;text-align:center;padding:0 12px 8px}
+</style></head>
+<body>
+<div class="app">
+<header><div class="avatar">寒</div><div><h1>กง จื่อหาน | 宫子寒</h1><div class="sub">Private Room • online</div></div></header>
+<main class="chat" id="chat">
+<div class="msg him">หายไปไหนมา… กูรอมึงอยู่นะ</div>
+<div class="time">02:40</div>
+<div class="msg me">เราเหงาจัง 🥺</div>
+<div class="msg him">งั้นคืนนี้ไม่ต้องไปไหนแล้ว\nอยู่คุยกับกูตรงนี้</div>
+</main>
+<div class="note">โรลเพลย์ตัวละครสมมติ • ข้อความตอบโดย AI</div>
+<form id="form"><input id="input" autocomplete="off" placeholder="พิมพ์ข้อความถึงจื่อหาน…"><button>➤</button></form>
+</div>
+<script>
+const chat=document.getElementById('chat'), form=document.getElementById('form'), input=document.getElementById('input');
+function add(text, cls){const d=document.createElement('div');d.className='msg '+cls;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+form.addEventListener('submit',async e=>{
+ e.preventDefault(); const text=input.value.trim(); if(!text)return;
+ add(text,'me'); input.value='';
+ const t=document.createElement('div');t.className='typing';t.textContent='จื่อหานกำลังพิมพ์…';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;
+ try{
+  const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+  const data=await r.json(); t.remove(); add(data.reply||'…','him');
+ }catch(err){t.remove();add('ตอนนี้กูตอบไม่ได้ ลองใหม่อีกทีนะ','him')}
+});
+</script>
+</body></html>
