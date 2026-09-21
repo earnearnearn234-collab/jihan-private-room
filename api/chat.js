@@ -47,7 +47,7 @@ ${message}
 
     if (!response.ok) {
       const detail = await response.text();
-      return res.status(502).json({
+      return res.status(response.status).json({
         error: "OpenAI API error",
         detail
       });
